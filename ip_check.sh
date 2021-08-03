@@ -11,7 +11,7 @@ line=$1 #变量1
 for ip  in  $(cat $line )
 do 
  echo "$ip"
- ping -c 1 $ip > /dev/null 2>&1
+ ping -c 2 -W 3 $ip > /dev/null 2>&1 &
   if [ $? -eq 0 ]; then
    echo "good"
   else 
