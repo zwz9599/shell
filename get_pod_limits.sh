@@ -31,12 +31,11 @@ pods=$(kubectl get pods -n $namespace |awk '{print $1}'| grep -v NAME|grep -v in
 for pod in $pods;do
 	echo "----------------------------------------"
 	echo PodName=$pod
-	container_name=$(kubectl describe pod $pod  -n $namespace |grep -B 1 "Container ID:"|grep -v "Container ID:"|sed '2d')
-        containers=($container_name)
+	container_name=$(kubectl describe pod $pod  -n $namespace |grep -B 1 "Container ID:"|grep -v "Container ID:"|sed '2d'|cut -d ":" -f1)
 
-        for container in ${containers[*]};do
+        for container in $container_name;do
          	echo ContainerName=$container
-		if [ $container != "filebeat:" ];then
+		if [ $container != "filebeat" ];then
 			limit_rule=$(kubectl describe pod $pod -n $namespace |grep -A 5 Limits:|head -6)
 			echo Rules=$limit_rule
 		else
