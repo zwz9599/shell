@@ -1,8 +1,8 @@
 #! /bin/bash
 <<INFO
 AUTHOR:zhaowenzhe@yushu.biz
-DATE:2023-04-06
-VERSION:0.0.1
+DATE:2023-04-07
+VERSION:0.0.3
 INFO
 
 #set -xe
@@ -36,10 +36,10 @@ for pod in $pods;do
         for container in $container_name;do
          	echo ContainerName=$container
 		if [ $container != "filebeat" ];then
-			limit_rule=$(kubectl describe pod $pod -n $namespace |grep -A 5 Limits:|head -6)
+			limit_rule=$(kubectl describe pod $pod -n $namespace |grep -A 5 Limits:|head -6|grep -v Liveness|grep -v Readiness|grep -v Environment|grep -v TZ)
 			echo Rules=$limit_rule
 		else
-			limit_rule=$(kubectl describe pod $pod -n $namespace |grep -A 5 Limits:|tail -6)
+			limit_rule=$(kubectl describe pod $pod -n $namespace |grep -A 5 Limits:|tail -6|grep -v Liveness|grep -v Readiness|grep -v Environment|grep -v TZ)
 			echo Rules=$limit_rule
                 fi
         done
